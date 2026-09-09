@@ -1,0 +1,72 @@
+/* Digikala + 21st.dev inspired badge system */
+.cui-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.cui-badge--sm {
+    padding: 2px 6px;
+    font-size: 10px;
+}
+
+.cui-badge--md {
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+/* Variants - Digikala discount style */
+.cui-badge--primary {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.cui-badge--secondary {
+    background: var(--color-secondary-subtle);
+    color: var(--color-secondary);
+}
+
+.cui-badge--success {
+    background: #e6f9ed;
+    color: var(--color-success);
+}
+
+.cui-badge--warning {
+    background: #fff5e0;
+    color: var(--color-warning);
+}
+
+.cui-badge--danger {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.cui-badge--neutral {
+    background: var(--color-surface-subtle);
+    color: var(--color-text-muted);
+}
+
+/* Dot indicator */
+.cui-badge__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+.cui-badge__icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.cui-badge__label {
+    display: inline-flex;
+    align-items: center;
+}

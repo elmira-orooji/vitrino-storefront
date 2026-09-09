@@ -1,0 +1,83 @@
+/* Digikala + 21st.dev inspired card system */
+.cui-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+}
+
+.cui-card--flat {
+    box-shadow: none;
+    border: 1px solid var(--color-border);
+}
+
+.cui-card--raised {
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+}
+
+.cui-card--hover {
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+    transition: box-shadow var(--motion-normal) var(--motion-easing),
+        transform var(--motion-normal) var(--motion-easing);
+}
+
+.cui-card--hover:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-1px);
+}
+
+/* Digikala-style product card specifics */
+.cui-card__image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    padding: 16px;
+}
+
+.cui-card__title {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cui-card__price {
+    margin: 8px 0 0;
+    color: var(--color-text);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.cui-card__original-price {
+    margin: 4px 0 0;
+    color: var(--color-text-subtle);
+    font-size: 12px;
+    text-decoration: line-through;
+}
+
+.cui-card__header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--color-border);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.cui-card__body {
+    padding: 20px;
+}
+
+.cui-card--no-padding .cui-card__body {
+    padding: 0;
+}
+
+.cui-card__footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface-subtle);
+}

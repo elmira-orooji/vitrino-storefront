@@ -1,0 +1,127 @@
+/* Digikala + 21st.dev inspired button system */
+.cui-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-control);
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        background-color var(--motion-fast) var(--motion-easing),
+        border-color var(--motion-fast) var(--motion-easing),
+        color var(--motion-fast) var(--motion-easing),
+        transform var(--motion-fast) var(--motion-easing);
+    white-space: nowrap;
+    user-select: none;
+    position: relative;
+}
+
+.cui-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.cui-btn:disabled,
+.cui-btn--loading {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Sizes - Digikala compact scale */
+.cui-btn--sm {
+    height: 32px;
+    padding-inline: 12px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+.cui-btn--md {
+    height: 40px;
+    padding-inline: 16px;
+    font-size: 13px;
+}
+
+.cui-btn--lg {
+    height: 48px;
+    padding-inline: 24px;
+    font-size: 15px;
+    border-radius: 10px;
+}
+
+/* Primary - Digikala red, flat modern style */
+.cui-btn--primary {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.cui-btn--primary:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+}
+
+/* Secondary - Teal accent */
+.cui-btn--secondary {
+    background: var(--color-secondary);
+    color: #fff;
+}
+
+.cui-btn--secondary:hover:not(:disabled) {
+    filter: brightness(0.92);
+}
+
+/* Outline - Clean border style */
+.cui-btn--outline {
+    background: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+.cui-btn--outline:hover:not(:disabled) {
+    border-color: var(--color-text-muted);
+    background: var(--color-surface-subtle);
+}
+
+/* Ghost - Subtle hover */
+.cui-btn--ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+}
+
+.cui-btn--ghost:hover:not(:disabled) {
+    background: var(--color-surface-subtle);
+    color: var(--color-text);
+}
+
+/* Full width */
+.cui-btn--full {
+    width: 100%;
+}
+
+/* Icon slots */
+.cui-btn__icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.cui-btn__label {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Loading spinner */
+.cui-btn__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: cui-spin 0.6s linear infinite;
+}
+
+@keyframes cui-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
