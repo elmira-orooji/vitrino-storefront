@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import MobileNavigation from '~components/layout/MobileNavigation';
+import SiteFooter from '~components/layout/SiteFooter';
 import SiteHeader from '~components/layout/SiteHeader';
 
 interface AppShellProps {
@@ -9,7 +10,7 @@ interface AppShellProps {
     /** Current number of products in the cart. */
     cartCount: number;
     /** Current top-level page used by mobile navigation. */
-    currentPage: 'home' | 'products';
+    currentPage: 'home' | 'products' | 'account';
     /** Called after either search form is submitted. */
     onSearch: (query: string) => void;
 }
@@ -31,6 +32,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children, cartCount, current
             <main className="app-shell__main" id="main-content" tabIndex={-1}>
                 {children}
             </main>
+            <SiteFooter />
             <MobileNavigation cartCount={cartCount} currentPage={currentPage} />
         </div>
     );
