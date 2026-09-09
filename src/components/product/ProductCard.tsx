@@ -1,9 +1,9 @@
 import { Plus, Star, Truck } from 'lucide-react';
 import { memo, useCallback } from 'react';
 
+import { Badge, Button } from '~components/ui';
 import type { Product } from '~types/product';
 
-import ProductArtwork from './ProductArtwork';
 import './product-card.css';
 
 interface ProductCardProps {
@@ -23,8 +23,18 @@ export const ProductCard = memo<ProductCardProps>(function ProductCard({
     onAddToCart,
 }) {
     const handleAdd = useCallback((): void => {
+        if (product.artwork === 'shoe') {
+            window.location.hash = `product-${product.id}`;
+            return;
+        }
         onAddToCart(product.title);
-    }, [onAddToCart, product.title]);
+    }, [onAddToCart, product]);
+
+    const addLabel = product.available
+        ? product.artwork === 'shoe'
+            ? `انتخاب اندازه ${product.title}`
+            : `افزودن ${product.title} به سبد خرید`
+        : `${product.title} ناموجود است`;
 
     return (
         <article className={`product-card product-card--${variant}${product.available ? '' : ' product-card--unavailable'}`}>
@@ -33,16 +43,28 @@ export const ProductCard = memo<ProductCardProps>(function ProductCard({
                 href={`#product-${product.id}`}
                 aria-label={product.title}
             >
-                <ProductArtwork label={product.title} kind={product.artwork} tone={product.tone} />
+                <div className="product-card__media">
+                    <img
+                        src={product.image.src}
+                        alt={product.image.alt}
+                        loading="lazy"
+                        decoding="async"
+                        style={{ objectPosition: product.image.position }}
+                    />
+                </div>
+                {product.discount > 0 && (
+                    <Badge variant="primary" className="product-card__discount-badge">
+                        {product.discount.toLocaleString('fa-IR')}٪
+                    </Badge>
+                )}
                 {variant === 'catalog' && <span className="product-card__brand">{product.brand}</span>}
                 <h3>{product.title}</h3>
             </a>
             <div className="product-card__meta">
                 {product.fastDelivery && (
-                    <span className="product-card__delivery">
-                        <Truck aria-hidden="true" size={14} />
+                    <Badge variant="secondary" size="sm" startIcon={<Truck size={12} />}>
                         ارسال سریع
-                    </span>
+                    </Badge>
                 )}
                 <span className="product-card__rating" aria-label={`امتیاز ${product.rating.toLocaleString('fa-IR')} از ۵`}>
                     <Star aria-hidden="true" size={14} fill="currentColor" />
@@ -50,9 +72,6 @@ export const ProductCard = memo<ProductCardProps>(function ProductCard({
                 </span>
             </div>
             <div className="product-card__pricing">
-                {product.discount > 0 && (
-                    <span className="product-card__discount">{product.discount.toLocaleString('fa-IR')}٪</span>
-                )}
                 <strong aria-label={`${priceFormatter.format(product.price)} تومان`}>
                     {priceFormatter.format(product.price)}
                     <small>تومان</small>
@@ -63,15 +82,16 @@ export const ProductCard = memo<ProductCardProps>(function ProductCard({
                     </del>
                 )}
             </div>
-            <button
+            <Button
                 className="product-card__add"
-                type="button"
+                variant={product.available ? 'outline' : 'ghost'}
+                size="sm"
                 onClick={handleAdd}
                 disabled={!product.available}
-                aria-label={product.available ? `افزودن ${product.title} به سبد خرید` : `${product.title} ناموجود است`}
+                aria-label={addLabel}
             >
                 {product.available ? <Plus aria-hidden="true" size={18} /> : <span>ناموجود</span>}
-            </button>
+            </Button>
         </article>
     );
 });
