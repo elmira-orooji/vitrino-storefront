@@ -4,14 +4,14 @@ interface MobileNavigationProps {
     /** Current number of products in the cart. */
     cartCount: number;
     /** Current top-level page. */
-    currentPage: 'home' | 'products';
+    currentPage: 'home' | 'products' | 'account';
 }
 
 const navigationItems = [
     { label: 'خانه', href: '#home', icon: House, page: 'home' },
     { label: 'دسته‌بندی', href: '#products', icon: Grid2X2, page: 'products' },
     { label: 'سبد خرید', href: '#cart', icon: ShoppingCart, page: null },
-    { label: 'حساب من', href: '#account', icon: UserRound, page: null },
+    { label: 'حساب من', href: '#account', icon: UserRound, page: 'account' },
 ] as const;
 
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({ cartCount, currentPage }) => {

@@ -13,11 +13,13 @@ interface ProductListPageProps {
     query: string;
     /** Category selected through a home or header link. */
     initialCategoryId: string;
+    /** The catalog stays mounted while product details are open. */
+    isActive: boolean;
     /** Adds one unit of a selected product to the cart. */
     onAddToCart: (productName: string) => void;
 }
 
-export const ProductListPage: React.FC<ProductListPageProps> = ({ query, initialCategoryId, onAddToCart }) => {
+export const ProductListPage: React.FC<ProductListPageProps> = ({ query, initialCategoryId, isActive, onAddToCart }) => {
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const filterDialogRef = useRef<HTMLDialogElement>(null);
     const {
@@ -43,6 +45,10 @@ export const ProductListPage: React.FC<ProductListPageProps> = ({ query, initial
         filterDialogRef.current?.close();
         setIsMobileFilterOpen(false);
     }, []);
+
+    useEffect(() => {
+        if (!isActive) closeMobileFilter();
+    }, [closeMobileFilter, isActive]);
 
     useEffect(() => {
         if (!isMobileFilterOpen) return;

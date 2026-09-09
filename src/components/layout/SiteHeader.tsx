@@ -9,6 +9,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import BrandLogo from '~components/brand/BrandLogo';
+import { Badge, Button } from '~components/ui';
 
 import SearchForm from './SearchForm';
 
@@ -80,15 +81,22 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ cartCount, onSearch }) =
                     </a>
                     <SearchForm inputId="desktop-search" onSearch={onSearch} />
                     <div className="site-header__actions">
-                        <a className="account-action" href="#account">
-                            <CircleUserRound aria-hidden="true" size={20} strokeWidth={1.8} />
-                            <span>ورود | ثبت‌نام</span>
-                        </a>
+                        <Button
+                            variant="outline"
+                            size="md"
+                            startIcon={<CircleUserRound size={20} strokeWidth={1.8} />}
+                            className="account-action"
+                            onClick={() => { window.location.hash = 'account'; }}
+                        >
+                            ورود | ثبت‌نام
+                        </Button>
                         <span className="site-header__separator" aria-hidden="true" />
                         <a className="icon-action cart-action" href="#cart" aria-label="سبد خرید">
                             <ShoppingCart aria-hidden="true" size={23} strokeWidth={1.8} />
                             {cartCount > 0 && (
-                                <span className="cart-action__count">{cartCount.toLocaleString('fa-IR')}</span>
+                                <Badge variant="primary" size="sm" className="cart-action__count">
+                                    {cartCount.toLocaleString('fa-IR')}
+                                </Badge>
                             )}
                         </a>
                     </div>
@@ -98,17 +106,18 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ cartCount, onSearch }) =
                     <div className="site-header__nav content-container">
                         <nav className="primary-navigation" aria-label="ناوبری اصلی">
                             <div className="category-menu" ref={categoryMenuRef}>
-                                <button
+                                <Button
+                                    variant="ghost"
+                                    size="md"
                                     className="category-menu__trigger"
-                                    type="button"
                                     aria-expanded={isCategoryMenuOpen}
                                     aria-controls="category-menu-panel"
                                     onClick={toggleCategoryMenu}
+                                    startIcon={<Menu size={19} />}
+                                    endIcon={<ChevronDown size={16} />}
                                 >
-                                    <Menu aria-hidden="true" size={19} />
-                                    <span>دسته‌بندی کالاها</span>
-                                    <ChevronDown aria-hidden="true" size={16} />
-                                </button>
+                                    دسته‌بندی کالاها
+                                </Button>
                                 {isCategoryMenuOpen && (
                                     <div className="category-menu__panel" id="category-menu-panel">
                                         <p>دسته‌های پرطرفدار</p>
@@ -128,10 +137,14 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ cartCount, onSearch }) =
                             <a href="#products">پرفروش‌ترین‌ها</a>
                             <a href="#products">تازه‌ها</a>
                         </nav>
-                        <button className="location-action" type="button">
-                            <MapPin aria-hidden="true" size={17} strokeWidth={1.8} />
-                            <span>انتخاب شهر</span>
-                        </button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="location-action"
+                            startIcon={<MapPin size={17} strokeWidth={1.8} />}
+                        >
+                            انتخاب شهر
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -142,11 +155,15 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ cartCount, onSearch }) =
                     className="site-search--mobile"
                     onSearch={onSearch}
                 />
-                <button className="mobile-location" type="button">
-                    <MapPin aria-hidden="true" size={17} strokeWidth={1.8} />
-                    <span>انتخاب نشانی ارسال</span>
-                    <ChevronDown aria-hidden="true" size={15} />
-                </button>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mobile-location"
+                    startIcon={<MapPin size={17} strokeWidth={1.8} />}
+                    endIcon={<ChevronDown size={15} />}
+                >
+                    انتخاب نشانی ارسال
+                </Button>
             </div>
         </header>
     );

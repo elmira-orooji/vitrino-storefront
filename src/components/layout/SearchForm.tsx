@@ -1,6 +1,8 @@
 import { Search } from 'lucide-react';
 import type { FormEvent } from 'react';
 
+import { Button, Input } from '~components/ui';
+
 interface SearchFormProps {
     /** Unique input identifier for desktop and mobile instances. */
     inputId: string;
@@ -28,18 +30,20 @@ export const SearchForm: React.FC<SearchFormProps> = ({
             role="search"
             onSubmit={handleSubmit}
         >
-            <label className="sr-only" htmlFor={inputId}>
-                جست‌وجوی محصول یا برند
-            </label>
-            <Search aria-hidden="true" size={20} strokeWidth={1.8} />
-            <input
+            <Input
                 id={inputId}
                 name="query"
                 type="search"
                 placeholder="جست‌وجوی محصول یا برند"
                 autoComplete="off"
+                hideLabel
+                label="جست‌وجوی محصول یا برند"
+                startAdornment={<Search size={20} strokeWidth={1.8} />}
+                className="site-search__input"
             />
-            <button type="submit">جست‌وجو</button>
+            <Button type="submit" variant="ghost" size="sm" className="site-search__submit">
+                جست‌وجو
+            </Button>
         </form>
     );
 };

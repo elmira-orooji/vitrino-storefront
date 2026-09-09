@@ -1,6 +1,14 @@
 export type ProductArtworkKind = 'headphones' | 'mug' | 'serum' | 'shoe' | 'watch';
 export type ProductTone = 'coral' | 'mint' | 'sand' | 'sky';
 
+export interface ProductImage {
+    src: string;
+    alt: string;
+    sourceUrl: string;
+    credit: string;
+    position?: string;
+}
+
 export interface Product {
     /** Stable product identifier. */
     id: string;
@@ -22,6 +30,8 @@ export interface Product {
     artwork: ProductArtworkKind;
     /** Color treatment for the artwork surface. */
     tone: ProductTone;
+    /** Real product photograph and its public source. */
+    image: ProductImage;
     /** Category identifier used by filters. */
     categoryId: string;
     /** User-facing category label. */
