@@ -5,7 +5,6 @@ import { logger } from 'hono/logger';
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
 import categoryRoutes from './routes/categories.js';
-import categoryRoutes from './routes/categories.js';
 
 const app = new Hono();
 
