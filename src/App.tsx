@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
+import { AuthProvider } from '@/contexts/AuthContext';
 import AppShell from '@/app/AppShell';
 import { getCatalogHref, getRouteFromHash, homeRoute } from '@/app/navigation';
 import type { StorefrontRoute } from '@/app/navigation';
@@ -58,44 +59,46 @@ const App: React.FC = () => {
     }, []);
 
     return (
-        <AppShell cartCount={cartCount} currentPage={route.page === 'account' ? 'account' : route.page === 'home' ? 'home' : 'products'} onSearch={handleSearch}>
-            {route.page === 'home' && <HomePage onAddToCart={handleAddToCart} />}
-            {catalogRoute !== null && (
-                <div hidden={route.page !== 'products'}>
-                    <Suspense fallback={<div className="page-loading" aria-label="در حال بارگذاری محصولات" />}>
-                        <ProductListPage
-                            key={JSON.stringify([catalogRoute.query, catalogRoute.categoryId])}
-                            query={catalogRoute.query}
-                            initialCategoryId={catalogRoute.categoryId}
-                            isActive={route.page === 'products'}
+        <AuthProvider>
+            <AppShell cartCount={cartCount} currentPage={route.page === 'account' ? 'account' : route.page === 'home' ? 'home' : 'products'} onSearch={handleSearch}>
+                {route.page === 'home' && <HomePage onAddToCart={handleAddToCart} />}
+                {catalogRoute !== null && (
+                    <div hidden={route.page !== 'products'}>
+                        <Suspense fallback={<div className="page-loading" aria-label="در حال بارگذاری محصولات" />}>
+                            <ProductListPage
+                                key={JSON.stringify([catalogRoute.query, catalogRoute.categoryId])}
+                                query={catalogRoute.query}
+                                initialCategoryId={catalogRoute.categoryId}
+                                isActive={route.page === 'products'}
+                                onAddToCart={handleAddToCart}
+                            />
+                        </Suspense>
+                    </div>
+                )}
+                {route.page === 'product' && (
+                    <Suspense fallback={<div className="page-loading" aria-label="در حال بارگذاری جزئیات محصول" />}>
+                        <ProductDetailPage
+                            key={route.productId}
+                            productId={route.productId}
+                            returnHref={getCatalogHref(catalogRoute)}
                             onAddToCart={handleAddToCart}
                         />
                     </Suspense>
+                )}
+                {route.page === 'account' && (
+                    <Suspense fallback={<div className="page-loading" aria-label="در حال بارگذاری صفحه ورود" />}>
+                        <AccountPage />
+                    </Suspense>
+                )}
+                <div
+                    className={`shop-feedback${feedbackMessage.length > 0 ? ' shop-feedback--visible' : ''}`}
+                    role="status"
+                    aria-live="polite"
+                >
+                    {feedbackMessage}
                 </div>
-            )}
-            {route.page === 'product' && (
-                <Suspense fallback={<div className="page-loading" aria-label="در حال بارگذاری جزئیات محصول" />}>
-                    <ProductDetailPage
-                        key={route.productId}
-                        productId={route.productId}
-                        returnHref={getCatalogHref(catalogRoute)}
-                        onAddToCart={handleAddToCart}
-                    />
-                </Suspense>
-            )}
-            {route.page === 'account' && (
-                <Suspense fallback={<div className="page-loading" aria-label="در حال بارگذاری صفحه ورود" />}>
-                    <AccountPage />
-                </Suspense>
-            )}
-            <div
-                className={`shop-feedback${feedbackMessage.length > 0 ? ' shop-feedback--visible' : ''}`}
-                role="status"
-                aria-live="polite"
-            >
-                {feedbackMessage}
-            </div>
-        </AppShell>
+            </AppShell>
+        </AuthProvider>
     );
 };
 
