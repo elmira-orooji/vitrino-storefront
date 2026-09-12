@@ -1,16 +1,18 @@
-import { ArrowRight, Check, ChevronLeft, Info, PackageCheck, PackageSearch, RotateCcw, ShieldCheck, ShoppingBag, Star, Store, Truck } from 'lucide-react';
-import { useCallback, useRef, useState } from 'react';
+import { ArrowRight, Check, ChevronLeft, Info, Loader2, PackageCheck, PackageSearch, RotateCcw, ShieldCheck, ShoppingBag, Star, Store, Truck } from 'lucide-react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 
-import { products } from '@/data/products';
 import ProductCard from '~components/product/ProductCard';
 import QuantitySelector from '~components/product/QuantitySelector';
 import type { Product } from '~types/product';
+import { mapApiProduct } from '@/lib/productMapper';
+import { useProducts } from '../../product-list/hooks/useProducts';
 
 import ProductGallery from './ProductGallery';
 import ProductInformation from './ProductInformation';
 import { getProductDetails } from '../data';
 import { validateSelection } from '../helpers/selection';
+import { useProduct } from '../hooks/useProduct';
 import '../product-detail.css';
 
 interface ProductDetailPageProps {
@@ -21,7 +23,12 @@ interface ProductDetailPageProps {
 
 const formatPrice = (value: number): string => value.toLocaleString('fa-IR');
 
-const ProductDetailContent: React.FC<Omit<ProductDetailPageProps, 'productId'> & { product: Product }> = ({ product, returnHref, onAddToCart }) => {
+interface ProductDetailContentProps extends Omit<ProductDetailPageProps, 'productId'> {
+    product: Product;
+    relatedProducts?: Product[];
+}
+
+const ProductDetailContent: React.FC<ProductDetailContentProps> = ({ product, returnHref, onAddToCart, relatedProducts = [] }) => {
     const details = getProductDetails(product);
     const [colorId, setColorId] = useState(details.colors[0]?.id ?? '');
     const [size, setSize] = useState('');
@@ -29,7 +36,6 @@ const ProductDetailContent: React.FC<Omit<ProductDetailPageProps, 'productId'> &
     const [selectionError, setSelectionError] = useState('');
     const optionsRef = useRef<HTMLDivElement>(null);
     const selectedColor = details.colors.find((color) => color.id === colorId);
-    const relatedProducts = products.filter((item) => item.id !== product.id && item.categoryId === product.categoryId).slice(0, 4);
 
     const handleAdd = useCallback((): void => {
         const error = validateSelection(product, details, { colorId, size, quantity });
@@ -130,12 +136,46 @@ const ProductDetailContent: React.FC<Omit<ProductDetailPageProps, 'productId'> &
 };
 
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId, returnHref, onAddToCart }) => {
-    const product = products.find((item) => item.id === productId);
-    return product ? <ProductDetailContent key={product.id} product={product} returnHref={returnHref} onAddToCart={onAddToCart} /> : (
-        <section className="detail-not-found content-container">
-            <PackageSearch size={52} aria-hidden="true" /><h1>این محصول پیدا نشد</h1><p>ممکن است نشانی محصول درست نباشد. از فهرست محصولات دوباره انتخاب کنید.</p><a href={returnHref}>بازگشت به فهرست محصولات</a>
-        </section>
+    const { product: apiProduct, isLoading, error } = useProduct(productId);
+
+    // Map API product to local format
+    const product = useMemo(() => apiProduct ? mapApiProduct(apiProduct) : null, [apiProduct]);
+
+    // Fetch related products from same category
+    const { products: relatedApiProducts } = useProducts({
+        category: product?.categoryId || undefined,
+        limit: 5,
+    });
+
+    const relatedProducts = useMemo(
+        () => relatedApiProducts
+            .filter((p) => p.id !== productId)
+            .slice(0, 4)
+            .map(mapApiProduct),
+        [relatedApiProducts, productId],
     );
+
+    if (isLoading) {
+        return (
+            <section className="detail-not-found content-container">
+                <Loader2 size={52} className="animate-spin" aria-hidden="true" />
+                <h1>در حال بارگذاری...</h1>
+            </section>
+        );
+    }
+
+    if (error || !product) {
+        return (
+            <section className="detail-not-found content-container">
+                <PackageSearch size={52} aria-hidden="true" />
+                <h1>این محصول پیدا نشد</h1>
+                <p>{error || 'ممکن است نشانی محصول درست نباشد.'}</p>
+                <a href={returnHref}>بازگشت به فهرست محصولات</a>
+            </section>
+        );
+    }
+
+    return <ProductDetailContent key={product.id} product={product} returnHref={returnHref} onAddToCart={onAddToCart} relatedProducts={relatedProducts} />;
 };
 
 export default ProductDetailPage;
